@@ -1,0 +1,22 @@
+{
+  "name": "iotrim-rest-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ot316/IoTrigger-Rest-API.git"
+  },
+  "author": "ot316",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ot316/IoTrigger-Rest-API/issues"
+  },
+  "homepage": "https://github.com/ot316/IoTrigger-Rest-API#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
