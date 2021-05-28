@@ -1,25 +1,36 @@
-const http = require('http');
-const url = require('url');
+exports.trimlist = function (req, res, trimlist) {
+    body = '';
 
-module.exports = http.createServer((req, res) => {
+    req.on('data', function (chunk) {
+        body += chunk;
+    });
 
-    var service = require('./service.js');
-    const reqUrl = url.parse(req.url, true);
+    req.on('end', function () {
+        postBody = JSON.parse(body);
+        var line = trimlist.split(/\r?\n/);
+        var version = line[0].match(/\d+/)[0];
+        try {
+            var clientVersion = postBody.version
+            if (clientVersion < version) {
+                var response = {
+                    "version": version,
+                    "trimlist": trimlist
+                }
+            }
+        } catch (error) {
+            response = "Invalid Request";
+            console.error(response);
+            console.error(error);
+        }
 
-    // GET Endpoint
-    if (reqUrl.pathname == '/trimlist' && req.method === 'POST') {
-        console.log('Request Type:' +
-            req.method + ' Endpoint: ' +
-            reqUrl.pathname);
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify(response));
+    });
+};
 
-        service.trimlist(req, res, iotrim);
-
-    } else {
-        console.log('Request Type:' +
-            req.method + ' Invalid Endpoint: ' +
-            reqUrl.pathname);
-
-        service.invalidRequest(req, res);
-
-    }
-});
+exports.invalidRequest = function (req, res) {
+    res.statusCode = 404;
+    res.setHeader('Content-Type', 'text/plain');
+    res.end('Invalid Request');
+};

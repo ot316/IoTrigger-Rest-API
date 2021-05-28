@@ -1,32 +1,42 @@
-// This script starts the webserver to server up the latest iotrim trimlist
+// This script starts the webserver to serve up the latest iotrim trimlist. 
+// The server must be restarted to if the list is updated
+const http = require('http');
+const url = require('url');
 const fs = require('fs');
 
 // read server config file
-const conf;
-
-fs.readFile('./server.config', 'utf8', (err, data) => {
-	if (err) {console.log(`Error reading server config file from disk: ${err}`)}
-	else {conf = data;}
-});
-
+const serverConf = JSON.parse(fs.readFileSync('./server.config', 'utf8'));
 
 // read iotrim trimlist file
-const iotrim;
+const trimlist = fs.readFileSync(serverConf['pathToTrimlist'], 'utf8');
 
-fs.readFile('./iotrim', 'utf8', (err, data) => {
-	if (err) {console.log(`Error reading iotrim trimlist file from disk: ${err}`)}
-	else {conf = data;}
-	});
+const app = http.createServer((req, res) => {
 
+    var controller = require('./controller.js');
+    const reqUrl = url.parse(req.url, true);
+
+    // POST Endpoint
+    if (reqUrl.pathname == '/trimlist' && req.method === 'POST') {
+        console.log('Request Type:' +
+            req.method + ' Endpoint: ' +
+            reqUrl.pathname);
+
+        controller.trimlist(req, res, trimlist);
+
+    } else {
+        console.log('Request Type:' +
+            req.method + ' Invalid Endpoint: ' +
+            reqUrl.pathname);
+
+        controller.invalidRequest(req, res);
+
+    }
+});
 
 // Start Server
-const serverConf = JSON.parse(data)
 const hostname = serverConf["serverAddr"];
 const port = serverConf["port"];
 
-const app = require('./controller.js');
-trimlist = 'hi'
-
-app.listen(port, hostname, iotrim, () => {
+app.listen(port, hostname, () => {
 	console.log(`Server is running on http://${hostname}:${port}`);
 });
