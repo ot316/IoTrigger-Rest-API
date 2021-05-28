@@ -4,7 +4,8 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "test.js"
+    "test": "test.js",
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
@@ -18,5 +19,6 @@
   "homepage": "https://github.com/ot316/IoTrigger-Rest-API#readme",
   "dependencies": {
     "express": "^4.17.1"
-  }
+  },
+  "keywords": []
 }
