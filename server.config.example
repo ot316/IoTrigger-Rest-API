@@ -1,4 +1,5 @@
 {
     "serverAddr":"localhost",
-    "port":80
+    "port":80,
+    "pathToTrimlist":"./iotrim"
 }
